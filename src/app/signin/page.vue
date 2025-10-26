@@ -181,6 +181,9 @@
 </style>
 <script lang="ts" setup>
 import { ref, computed } from "vue";
+import { invoke } from '@tauri-apps/api/core';
+import { SignUserResponse } from "@lib/types";
+
 
 const form = ref({
   email: "",
@@ -190,7 +193,7 @@ const form = ref({
 
 const showPassword = ref(false);
 const isLoading = ref(false);
-const message = ref("");
+const message = ref(""); 
 const messageType = ref("");
 
 const messageClass = computed(() => {
@@ -198,5 +201,19 @@ const messageClass = computed(() => {
     ? "bg-green-900/50 text-green-400 border border-green-800"
     : "bg-red-900/50 text-red-400 border border-red-800";
 });
+async function handleLogin(){
+ try {
+    
+    const response = await invoke<SignUserResponse>("login_user", {
+      email: form.value.email,
+      password: form.value.password,
+    });
+    console.log("Server answer: ", response.answer);
+
+  } catch (err) {
+    console.error(err);
+  }
+}
+
 
 </script>

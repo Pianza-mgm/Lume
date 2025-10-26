@@ -203,9 +203,9 @@
 </style>
 
 <script lang="ts" setup>
-import { ref, computed } from "vue";
-import router from "@lib/router-config";
-import { invoke } from '@tauri-apps/api/core'
+import { ref } from "vue";
+import { invoke } from '@tauri-apps/api/core';
+import { SignUserResponse } from "@lib/types";
 
 const form = ref({
   name: "",
@@ -224,15 +224,14 @@ async function handlePost() {
     return
   }
 
-
   try {
-    const response = await invoke("post_user", {
+    const response = await invoke<SignUserResponse>("post_user", {
       name: form.value.name,
       email: form.value.email,
       password: form.value.password,
     });
 
-    console.log("resposta dessa porra: ", response);
+    console.log("Server answer: ", response.answer);
   } catch (err) {
     console.error(err);
   }
@@ -244,5 +243,5 @@ async function handlePost() {
 const showPassword = ref(false);
 const isLoading = ref(false);
 const message = ref("");
-const messageType = ref("");
+const messageClass = ref("");
 </script>
